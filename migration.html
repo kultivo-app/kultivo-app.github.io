@@ -1,31 +1,3 @@
-<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kultivo</title>
-<style>html,body{margin:0;height:100%;background:#3d8bff;color:#fff;font:700 18px system-ui,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center}</style>
-</head><body><p>Kultivo arrive…</p>
-<script>
-/* 19/11 : Kultivo a changé d'adresse (aymericchevailler45-pixel.github.io/Kultivo → kultivo-app.github.io).
-   L'ancienne adresse envoie ici la mémoire du joueur (sauvegarde, connexion, réglages) dans « #kmig=… » :
-   on la recopie SANS jamais remplacer ce qui existe déjà ici, puis on ouvre le jeu. */
-(async () => {
-    let hash = '';
-    try {
-        const m = location.hash.match(/^#kmig=([^&]*)(?:&z=(\d))?/);
-        if (m) {
-            const b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
-            const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-            let json;
-            if (m[2] === '1') json = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
-            else json = new TextDecoder().decode(bin);
-            const dump = JSON.parse(json);
-            hash = dump.__hash || '';
-            delete dump.__hash;
-            for (const [k, v] of Object.entries(dump)) {
-                if (typeof v === 'string' && localStorage.getItem(k) === null) localStorage.setItem(k, v);
-            }
-        }
-    } catch (e) { /* tant pis : le joueur se reconnecte, sa partie est dans son compte */ }
-    location.replace('./' + location.search + hash);
-})();
-</script>
-</body></html>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Kultivore</title></head><body>
+<script>/* 19/11 : Kultivo devient Kultivore : la mémoire envoyée par l'ancienne adresse continue vers la nouvelle. */
+location.replace('https://kultivore.github.io/migration.html' + location.search + location.hash);</script></body></html>
